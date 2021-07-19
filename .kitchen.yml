@@ -1,0 +1,55 @@
+---
+driver:
+  name: openstack
+  openstack_username: "EXT.ATHALAMOT"
+  openstack_api_key: "password"
+  openstack_auth_url: "http://10.0.0.1:5000/v3/auth/tokens"
+  disable_ssl_validation: true
+  require_chef_omnibus: true
+  openstack_region: "CLOUD"
+  openstack_project_domain: "Build"
+  openstack_user_domain: "Build"
+  openstack_project_name: "Chef"
+  server_name_prefix: "chef-test-integration-"
+  network_ref: "Discovered Network DvP_ICO"
+  flavor_ref: x86.Small
+  config_drive: true
+
+provisioner:
+  name: chef_zero
+  chef_omnibus_url: "http://10.0.0.1/chef-client/linux/install.sh"
+  install_msi_url: "http://10.0.0.1/chef-client/windows/chef-client-12.13.37-1-x64.msi"
+  sudo: false
+
+platforms:
+  - name: redhat7old
+    driver_config:
+      image_ref: redhat7.1-ico
+    transport:
+      username: "username1"
+      password: "password"
+  - name: redhat7
+    driver_config:
+      image_ref: redhat7.1-08082016
+    transport:
+      username: "username2"
+      password: "password"
+  - name: windows2012R2
+    driver_config:
+      image_ref: windows2012R2-08082016
+    transport:
+      name: winrm
+      username: "Administrator"
+      password: "password"
+
+verifier:
+  name: inspec
+
+verifier:
+  name: inspec
+
+suites:
+  - name: tscm
+    run_list:
+      - recipe[tscm::install]
+    includes: redhat7
